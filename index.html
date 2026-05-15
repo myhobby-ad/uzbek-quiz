@@ -21,7 +21,6 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
         }
         .container {
             background: var(--card);
@@ -43,26 +42,23 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: 0.3s;
+            transition: 0.2s;
         }
         .btn:hover {
             background: var(--primary);
             color: var(--bg);
         }
-        #question-num { color: var(--primary); font-size: 0.9rem; }
+        #question-num { color: var(--primary); font-size: 0.9rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container" id="quiz-container">
-        <div id="question-num">Savol 1/20</div>
-        <h2 id="question-text">Yuklanmoqda...</h2>
+    <div class="container">
+        <div id="question-num">Savol yuklanmoqda...</div>
+        <h2 id="question-text">Iltimos, kuting...</h2>
         <div id="options-container"></div>
     </div>
-<script src="script.js?v=1"></script>
- <script src="script.js?v=2"></script>
-<script src="script.js?v=3"></script>
-<script src="script.js?v=999"></script>
-<script src="english.js"></script>
+
+    <script src="english.js?v=2.0"></script>
 </body>
 </html>

@@ -1,8 +1,6 @@
-// Telegram Web App ob'ektini olish
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// 20 ta ingliz tili savoli
 const questions = [
     { question: "I ___ a student.", options: ["am", "is", "are", "be"], correct: 0 },
     { question: "She ___ to school every day.", options: ["go", "goes", "going", "gone"], correct: 1 },
@@ -31,13 +29,11 @@ let score = 0;
 
 function loadQuestion() {
     const q = questions[currentQuestion];
-    
-    // HTML elementlarni yangilash
     document.getElementById("question-num").innerText = `Savol ${currentQuestion + 1}/${questions.length}`;
     document.getElementById("question-text").innerText = q.question;
     
     const container = document.getElementById("options-container");
-    container.innerHTML = ""; 
+    container.innerHTML = "";
 
     q.options.forEach((opt, index) => {
         const btn = document.createElement("button");
@@ -49,29 +45,16 @@ function loadQuestion() {
 }
 
 function checkAnswer(index) {
-    if (index === questions[currentQuestion].correct) {
-        score++;
-    }
-    
+    if (index === questions[currentQuestion].correct) score++;
     currentQuestion++;
 
     if (currentQuestion < questions.length) {
         loadQuestion();
     } else {
-        finishQuiz();
+        const data = { score: score, total: questions.length };
+        tg.sendData(JSON.stringify(data));
+        tg.close();
     }
 }
 
-function finishQuiz() {
-    const resultData = {
-        score: score,
-        total: questions.length
-    };
-    
-    // Ma'lumotni botga yuborish
-    tg.sendData(JSON.stringify(resultData));
-    tg.close();
-}
-
-// O'yinni boshlash
 loadQuestion();
