@@ -39,22 +39,53 @@ function loadQuestion() {
         const btn = document.createElement("button");
         btn.className = "btn";
         btn.innerText = opt;
-        btn.onclick = () => checkAnswer(index);
+        btn.onclick = () => checkAnswer(index, btn);
         container.appendChild(btn);
     });
 }
 
-function checkAnswer(index) {
-    if (index === questions[currentQuestion].correct) score++;
-    currentQuestion++;
+function checkAnswer(index, clickedBtn) {
+    const correctIndex = questions[currentQuestion].correct;
+    const allButtons = document.querySelectorAll('.btn');
+    
+    // Tugmalarni vaqtincha faolsizlantirish (ikki marta bosmaslik uchun)
+    allButtons.forEach(btn => btn.disabled = true);
 
-    if (currentQuestion < questions.length) {
-        loadQuestion();
+    if (index === correctIndex) {
+        score++;
+        clickedBtn.style.backgroundColor = "#00ff88"; // Yashil - To'g'ri
+        clickedBtn.style.color = "#0a0e14";
     } else {
-        const data = { score: score, total: questions.length };
-        tg.sendData(JSON.stringify(data));
-        tg.close();
+        clickedBtn.style.backgroundColor = "#ff4444"; // Qizil - Noto'g'ri
+        clickedBtn.style.color = "white";
+        // To'g'ri javobni ham ko'rsatish
+        allButtons[correctIndex].style.border = "2px solid #00ff88";
     }
+
+    // 1 soniyadan keyin keyingi savolga o'tish
+    setTimeout(() => {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }, 1000);
+}
+
+function showResult() {
+    const container = document.querySelector(".container");
+    container.innerHTML = `
+        <h2 style="color: #00ff88">Test Yakunlandi!</h2>
+        <p style="font-size: 1.2rem">Sizning natijangiz: ${score} / ${questions.length}</p>
+        <button class="btn" onclick="sendToBot()">Natijani Botga yuborish</button>
+    `;
+}
+
+function sendToBot() {
+    const data = { score: score, total: questions.length };
+    tg.sendData(JSON.stringify(data));
+    tg.close();
 }
 
 loadQuestion();
