@@ -1,6 +1,8 @@
+// Telegram Web App ob'ektini olish
 const tg = window.Telegram.WebApp;
-tg.expand();
+tg.expand(); // App-ni to'liq ekranga yozish
 
+// 20 ta ingliz tili savollari (A1, A2, B1 darajalari bo'yicha)
 const questions = [
     { question: "I ___ a student.", options: ["am", "is", "are", "be"], correct: 0 },
     { question: "She ___ to school every day.", options: ["go", "goes", "going", "gone"], correct: 1 },
@@ -27,13 +29,18 @@ const questions = [
 let currentQuestion = 0;
 let score = 0;
 
+// Savolni ekranga chiqarish funksiyasi
 function loadQuestion() {
     const q = questions[currentQuestion];
+    
+    // HTML elementlarini yangilash
     document.getElementById("question-num").innerText = `Savol ${currentQuestion + 1}/${questions.length}`;
     document.getElementById("question-text").innerText = q.question;
+    
     const container = document.getElementById("options-container");
-    container.innerHTML = "";
+    container.innerHTML = ""; // Oldingi tugmalarni tozalash
 
+    // Variantlarni tugma qilib qo'shish
     q.options.forEach((opt, index) => {
         const btn = document.createElement("button");
         btn.className = "btn";
@@ -43,21 +50,34 @@ function loadQuestion() {
     });
 }
 
+// Javobni tekshirish funksiyasi
 function checkAnswer(index) {
-    if (index === questions[currentQuestion].correct) score++;
+    if (index === questions[currentQuestion].correct) {
+        score++;
+    }
+    
     currentQuestion++;
 
     if (currentQuestion < questions.length) {
-        loadQuestion();
+        loadQuestion(); // Keyingi savolga o'tish
     } else {
-        finishQuiz();
+        finishQuiz(); // Testni tugatish
     }
 }
 
+// Testni yakunlash va botga ma'lumot yuborish
 function finishQuiz() {
-    const data = { score: score, total: questions.length };
-    tg.sendData(JSON.stringify(data));
+    const resultData = {
+        score: score,
+        total: questions.length
+    };
+    
+    // Ma'lumotni Telegram botga JSON ko'rinishida yuborish
+    tg.sendData(JSON.stringify(resultData));
+    
+    // Web App-ni avtomatik yopish
     tg.close();
 }
 
+// Birinchi savolni yuklash
 loadQuestion();
